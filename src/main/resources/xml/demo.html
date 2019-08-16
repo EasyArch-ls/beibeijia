@@ -1,0 +1,108 @@
+    <span style="font-size:14px;"><!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Web Socket Example</title>
+        <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.min.js" type="text/javascript"></script>
+        <style>
+        textarea {
+            width: 500px;
+            height: 100px;
+        }
+        </style>
+        <script>
+        $(function(){
+
+            var Sock = function() {
+                var socket;
+                if (!window.WebSocket) {
+                    window.WebSocket = window.MozWebSocket;
+                }
+
+                if (window.WebSocket) {
+                    socket = new WebSocket("ws://localhost:6789/Login");
+                    socket.onopen = onopen;
+                    socket.onmessage = onmessage;
+                    socket.onclose = onclose;
+                } else {
+                    alert("Your browser does not support Web Socket.");
+                }
+
+                function onopen(event) {
+                    getTextAreaElement().value = "Web Socket opened!";
+                }
+
+                function onmessage(event) {
+                    appendTextArea(event.data);
+                }
+
+                function onclose(event) {
+                    appendTextArea("Web Socket closed");
+                }
+
+                function appendTextArea(newData) {
+                    var el = getTextAreaElement();
+                    el.value = el.value + '\n' + newData;
+                }
+
+                function getTextAreaElement() {
+                    return document.getElementById('responseText');
+                }
+
+                function send(event) {
+                    event.preventDefault();
+                    if (window.WebSocket) {
+                        if (socket.readyState == WebSocket.OPEN) {
+                            socket.send(event.target.message.value);
+                        } else {
+                            alert("The socket is not open.");
+                        }
+                    }
+                }
+                document.forms.inputform.addEventListener('submit', send, false);
+            }
+            window.addEventListener('load', function() {
+                new Sock();
+            }, false);
+
+            $("#btnGet").click( function () {
+                $.get("http://localhost:6789/hello", { q: "ewftwrt"},
+                    function(data){
+                        $("#responseTextGet").val($("#responseTextGet").val() + data)
+                    });
+            });
+            $("#btnPost").click( function () {
+                $.post("http://localhost:6789/hello", { q: "Johdddn"},
+                    function(data){
+                        $("#responseTextPost").val($("#responseTextGet").val() + data)
+                    });
+            });
+        });
+
+        </script>
+    </head>
+    <body>
+        <h3>输入内容</h3>
+        <form name="inputform">
+            <input type="text" name="message" id="message" placeholder="Enter text to be sent" autofocus>
+            <input type="submit" value="发送WebSocket数据">
+        </form>
+        <h3>服务端返回</h3>
+        <textarea id="responseText"></textarea>
+        <h3>输入内容</h3>
+        <form name="inputform">
+            <input type="text" name="message" id="messageGet" placeholder="Enter text to be sent" autofocus>
+            <input type="button" value="Get数据" id="btnGet">
+        </form>
+        <h3>服务端返回</h3>
+        <textarea id="responseTextGet"></textarea>
+        <h3>输入内容</h3>
+        <form name="inputform">
+            <input type="text" name="message" id="messagePost" placeholder="Enter text to be sent" autofocus>
+            <input type="button" value="Post数据" id="btnPost">
+        </form>
+        <h3>服务端返回</h3>
+        <textarea id="responseTextPost"></textarea>
+    </body>
+</html>
+</span>

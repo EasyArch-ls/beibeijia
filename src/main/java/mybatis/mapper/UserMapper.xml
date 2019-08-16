@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.mapper.UserMapper">
+
+    <select id="findfirst" parameterType="java.lang.String" resultType="java.util.HashMap">
+        select * from users where phone=#{phone};
+    </select>
+
+    <insert id="regis" parameterType="java.lang.String">
+    insert into users (phone,uname,upass,sex,region,photo)
+    values (#{phone},#{uname},#{upass},#{sex},#{region},#{photo})
+    </insert>
+
+    <insert id="pdata" parameterType="java.lang.String">
+    insert into users (height,weight,swidth,twaist,bust,slength)
+    values (#{height},#{weight},#{swidth},#{twaist},#{bust},#{slength})
+    where phone=#{phone}
+    </insert>
+
+</mapper>
